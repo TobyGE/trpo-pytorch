@@ -158,7 +158,7 @@ def build_diag_gauss_policy(state_dim, hidden_dims, action_dim,
 
 def build_multinomial_policy(state_dim, hidden_dims, action_dim):
     '''
-    Build a multilayer perceptron with a DiagGaussianLayer at the output layer
+    Build a multilayer perceptron with a MultinomialLayer at the output layer
 
     Parameters
     ----------
