@@ -252,6 +252,8 @@ class TRPO:
         while self.episode_num < n_episodes:
             start_time = dt.now()
             self.episode_num += 1
+
+            #在当前参数化的policy下，跑n_trajectories个trajectories
             samples = self.simulator.sample_trajectories()
             states, actions, rewards, q_vals = self.unroll_samples(samples)
 
@@ -259,6 +261,7 @@ class TRPO:
             advantages -= torch.mean(advantages)
             advantages /= torch.std(advantages)
 
+            #回传sample之下得到的所有states，action，advantages序列，以更新policy的参数
             self.update_policy(states, actions, advantages)
 
             if last_q is not None:

@@ -46,6 +46,7 @@ class SinglePathSimulator(Simulator):
 
                 trajectory['states'].append(state)
 
+            #np.all 做‘与’运算
             while not np.all(done):
                 continue_mask = [i for i, trajectory in enumerate(memory) if not trajectory['done']]
                 trajs_to_update = [trajectory for trajectory in memory if not trajectory['done']]
@@ -54,6 +55,8 @@ class SinglePathSimulator(Simulator):
                 policy_input = torch.stack([torch.tensor(trajectory['states'][-1]).to(self.device)
                                             for trajectory in trajs_to_update])
 
+                #policy 函数返回一个对所有action的概率分布
+                #然后从中sample出真正被执行的action。
                 action_dists = self.policy(policy_input)
                 actions = action_dists.sample()
                 actions = actions.cpu()
@@ -74,6 +77,7 @@ class SinglePathSimulator(Simulator):
                     if not done:
                         trajectory['states'].append(state)
 
+                #根据env.step返回的结果，得到是否done，直到所有trajectory都跑完，循环才终止
                 done = [trajectory['done'] for trajectory in memory]
 
         return memory
